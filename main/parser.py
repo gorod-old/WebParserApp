@@ -8,8 +8,38 @@ from time import sleep
 from bs4 import BeautifulSoup as Bs
 
 from main.g_spreadsheets import get_spreadsheet_id, get_service, get_data_from_sheet, get_range, add_text_to_sheet
+from main.models import WorkTable
 
 parser_info = {}
+
+
+def check_parser():
+    spreadsheet = check_spreadsheet_in_db()
+    if parser_info.get('parser') is None and spreadsheet:
+        Parser(spreadsheet).start()
+        print('ProjSetup: start parser')
+
+
+def check_spreadsheet_in_db(spreadsheet=None):
+    try:
+        obj = WorkTable.objects.all()[0]
+        if spreadsheet is not None:
+            obj.spreadsheet = spreadsheet
+            obj.save()
+        spreadsheet = obj.spreadsheet
+    except Exception as e:
+        print(str(e))
+        if spreadsheet is not None:
+            obj = WorkTable(spreadsheet=spreadsheet)
+            obj.save()
+    return spreadsheet
+
+
+def delete_spreadsheet_from_db():
+    try:
+        WorkTable.objects.all()[0].delete()
+    except Exception as e:
+        print(str(e))
 
 
 def get_request_data(url: str, random_wait: tuple = (.01, .05)):

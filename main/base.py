@@ -32,24 +32,3 @@ def parse_json_payload(body, *keys):
         yield payload.get(key)
 
 
-def check_spreadsheet_in_db(spreadsheet=None):
-    try:
-        obj = WorkTable.objects.all()[0]
-        if spreadsheet is not None:
-            obj.spreadsheet = spreadsheet
-            obj.save()
-        spreadsheet = obj.spreadsheet
-    except Exception as e:
-        print(str(e))
-        if spreadsheet is not None:
-            obj = WorkTable(spreadsheet=spreadsheet)
-            obj.save()
-    return spreadsheet
-
-
-def delete_spreadsheet_from_db():
-    try:
-        WorkTable.objects.all()[0].delete()
-    except Exception as e:
-        print(str(e))
-

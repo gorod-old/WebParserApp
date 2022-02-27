@@ -1,14 +1,15 @@
+from time import sleep
+
 from django.http import HttpResponseNotFound, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 
 from django.urls import reverse
 
-from main.base import get_site_name, parse_json_payload, check_spreadsheet_in_db, delete_spreadsheet_from_db
+from main.base import get_site_name, parse_json_payload
 from main.exceptions import PayloadException
 from main.forms import ParserStartForm
 from main.g_spreadsheets import check_spreadsheet, get_credentials_email
-from main.models import WorkTable
-from main.parser import parser_info, Parser
+from main.parser import parser_info, Parser, check_spreadsheet_in_db, delete_spreadsheet_from_db, check_parser
 from webparserapp.settings import setup
 
 # Create your views here.
@@ -16,9 +17,7 @@ from webparserapp.settings import setup
 
 def index(request):
     spreadsheet = check_spreadsheet_in_db()
-    if parser_info.get('parser') is None:
-        if spreadsheet is not None:
-            Parser(spreadsheet).start()
+    check_parser()
     form = ParserStartForm(initial={'spreadsheet': spreadsheet})
     context = {
         'title': f'{get_site_name()} - Home Page',
@@ -70,8 +69,10 @@ def stop_parser(request):
     parser = parser_info.get('parser')
     if parser:
         parser.stop()
-        delete_spreadsheet_from_db()
-    return JsonResponse({'info': 'stop parser', 'success': True})
+    delete_spreadsheet_from_db()
+    while parser_info.get('parser'):
+        sleep(1)
+    return JsonResponse({'info': 'stop parser', 'success': True if parser else False})
 
 
 def page_not_found(request, exception):

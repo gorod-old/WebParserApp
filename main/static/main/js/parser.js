@@ -22,6 +22,7 @@ $(function() {
 
     $('#parser-form-stop').on('click', function() {
         event.preventDefault();
+        $('.load_screen').css("display", "block");
         $.ajax({
             url: 'stop-parser/',
             type: 'get',
@@ -34,6 +35,7 @@ $(function() {
                     $('#parser-form-submit').html('Start Parser');
                     $('#parser-status').css("display", "none");
                     $('input[name=spreadsheet').val('');
+                    $('.load_screen').css("display", "none");
                 }
             }
         });
