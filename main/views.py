@@ -9,7 +9,8 @@ from main.base import get_site_name, parse_json_payload
 from main.exceptions import PayloadException
 from main.forms import ParserStartForm
 from main.g_spreadsheets import check_spreadsheet, get_credentials_email
-from main.parser import parser_info, Parser, check_spreadsheet_in_db, delete_spreadsheet_from_db, check_parser
+from main.parser import parser_info, Parser, check_spreadsheet_in_db, delete_spreadsheet_from_db, \
+    check_parser
 from webparserapp.settings import setup
 
 # Create your views here.
@@ -17,7 +18,7 @@ from webparserapp.settings import setup
 
 def index(request):
     spreadsheet = check_spreadsheet_in_db()
-    check_parser()
+    check_parser(spreadsheet)
     form = ParserStartForm(initial={'spreadsheet': spreadsheet})
     context = {
         'title': f'{get_site_name()} - Home Page',
@@ -59,7 +60,9 @@ def run_parser(request):
         Parser(spreadsheet).start()
         info = 'start parser'
     else:
-        Parser(parser_info.get('parser')).change_spreadsheet(spreadsheet)
+        parser = Parser(parser_info.get('parser'))
+        parser.change_spreadsheet(spreadsheet)
+        parser.start()
         info = 'update parser'
 
     return JsonResponse({'info': info, 'success': True})
@@ -70,9 +73,9 @@ def stop_parser(request):
     if parser:
         parser.stop()
     delete_spreadsheet_from_db()
-    while parser_info.get('parser'):
-        sleep(1)
-    return JsonResponse({'info': 'stop parser', 'success': True if parser else False})
+    # while parser_info.get('parser'):
+    #     sleep(1)
+    return JsonResponse({'info': 'stop parser', 'success': True})
 
 
 def page_not_found(request, exception):
