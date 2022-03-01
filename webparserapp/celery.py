@@ -21,7 +21,7 @@ app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
 app.conf.beat_schedule = {
     'run_pars_every_10_min': {
-        'task': 'main.tasks.run_pars',
+        'task': 'tasks.run_pars',
         'schedule': 10.0,
     }
 }
