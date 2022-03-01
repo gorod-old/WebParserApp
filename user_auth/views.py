@@ -8,7 +8,6 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 from main.base import get_site_name
 from user_auth.base import process_user_ip, parse_json_payload
-from user_auth.emails import send_account_verification_link
 from user_auth.exceptions import PayloadException
 from user_auth.tokens import account_activation_token
 from user_auth.forms import LoginForm, SignUpForm

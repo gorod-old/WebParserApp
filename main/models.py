@@ -6,6 +6,11 @@ from django.db import models
 
 class WorkTable(models.Model):
     spreadsheet = models.CharField(max_length=250, verbose_name='spreadsheet link')
+    is_run = models.BooleanField(verbose_name='is_run')
+
+
+class WorkTableAdmin(admin.ModelAdmin):
+    list_display = ('spreadsheet', 'is_run')
 
 
 class SiteSettings(models.Model):

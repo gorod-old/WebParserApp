@@ -44,11 +44,10 @@
                         </div>
                         </div>
                 </div>
-
                 <p style="text-align: center;">
-                    <button id="parser-form-stop" style="{% if spreadsheet == '' %}display: none;{% endif %}"
+                    <button id="parser-form-stop" style="{% if not is_run %}display: none;{% endif %}"
                             type="button" class="btn btn-danger my-2 main-bt">Stop</button>
-                    <button id="parser-form-submit" style="{% if spreadsheet != '' %}display: none;{% endif %}"
+                    <button id="parser-form-submit" style="{% if is_run %}display: none;{% endif %}"
                             type="submit" class="btn btn-primary my-2 main-bt">
                         {% if spreadsheet == '' %}Start Parser{% else %}Update Parser{% endif %}</button>
                 </p>

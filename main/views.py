@@ -1,7 +1,4 @@
-from time import sleep
-
 from django.http import HttpResponseNotFound, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
 
 from django.urls import reverse
 
@@ -9,16 +6,16 @@ from main.base import get_site_name, parse_json_payload
 from main.exceptions import PayloadException
 from main.forms import ParserStartForm
 from main.g_spreadsheets import check_spreadsheet, get_credentials_email
-from main.parser import parser_info, Parser, check_spreadsheet_in_db, delete_spreadsheet_from_db, \
-    check_parser
+from main.parser import Parser
+from user_auth.base import check_auth
 from webparserapp.settings import setup
+
 
 # Create your views here.
 
-
+@check_auth
 def index(request):
-    spreadsheet = check_spreadsheet_in_db()
-    check_parser(spreadsheet)
+    spreadsheet, is_run = Parser.check_db()
     form = ParserStartForm(initial={'spreadsheet': spreadsheet})
     context = {
         'title': f'{get_site_name()} - Home Page',
@@ -26,9 +23,11 @@ def index(request):
         'subtitle': setup.PROJ_SUBTITLE,
         'user_pk': request.user.pk,
         'spreadsheet': '' if not spreadsheet else spreadsheet,
+        'is_run': is_run,
         'form': form
     }
-    return render(request, 'main/index.html', context=context)
+    template = 'main/index.html'
+    return context, template
 
 
 def home(request):
@@ -55,27 +54,19 @@ def run_parser(request):
         }
         return JsonResponse(context)
 
-    check_spreadsheet_in_db(spreadsheet)
-    if parser_info.get('parser') is None:
-        Parser(spreadsheet).start()
+    spreadsheet, is_run = Parser.check_db(spreadsheet)
+    if not is_run:
         info = 'start parser'
     else:
-        parser = Parser(parser_info.get('parser'))
-        parser.change_spreadsheet(spreadsheet)
-        parser.start()
         info = 'update parser'
+    success = Parser.start()
 
-    return JsonResponse({'info': info, 'success': True})
+    return JsonResponse({'info': info, 'success': success})
 
 
 def stop_parser(request):
-    parser = parser_info.get('parser')
-    if parser:
-        parser.stop()
-    delete_spreadsheet_from_db()
-    # while parser_info.get('parser'):
-    #     sleep(1)
-    return JsonResponse({'info': 'stop parser', 'success': True})
+    success = Parser.stop()
+    return JsonResponse({'info': 'stop parser', 'success': success})
 
 
 def page_not_found(request, exception):

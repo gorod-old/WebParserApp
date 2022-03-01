@@ -1,7 +1,7 @@
 import json
 
 from main.exceptions import PayloadException
-from main.models import SiteSettings, WorkTable
+from main.models import SiteSettings
 from webparserapp.settings import setup as Setup
 
 
