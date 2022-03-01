@@ -83,7 +83,7 @@ def request_data(url, headers=None, proxies=None, timeout=None):
 class Parser:
     def __init__(self, spreadsheet, bot_id=None, name=None):
         super(Parser, self).__init__()
-        self.is_run = True
+        self.is_run = False
         self.id = uuid.uuid4() if bot_id is None else bot_id
         self.parser_name = name
         self.spreadsheet_link = spreadsheet

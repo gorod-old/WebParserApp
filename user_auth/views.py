@@ -1,9 +1,10 @@
 from django.contrib.auth import login, authenticate, logout
+from django.contrib.sites.shortcuts import get_current_site
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
-from django.utils.encoding import force_str
-from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_str, force_bytes
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 from main.base import get_site_name
 from user_auth.base import process_user_ip, parse_json_payload
@@ -12,6 +13,7 @@ from user_auth.exceptions import PayloadException
 from user_auth.tokens import account_activation_token
 from user_auth.forms import LoginForm, SignUpForm
 from user_auth.models import *
+from .tasks import send_acc_verification_mail
 
 
 def entry(request):
@@ -61,10 +63,14 @@ def create_user(request):
         u_profile = UserProfile(user=user)
         u_profile.save()
         email_data = {
-            'user': user,
-            'email': email
+            'domain': get_current_site(request).domain,
+            'user': str(user),
+            'email': email,
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': account_activation_token.make_token(user),
         }
-        send_account_verification_link(request, email_data)
+        send_acc_verification_mail.delay(email_data)  # celery task
+        # send_account_verification_link(email_data)
         response['created'] = True
         response['info'].append('Your account has been created and an activation link has been sent to your email')
     return JsonResponse(response)
@@ -79,8 +85,9 @@ def activate_user(request):
         user = User.objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
-    context = {'user_pk': user.pk if user else None}
-    if user.is_active:
+    # context = {'user_pk': user.pk if user else None}
+    context = {}
+    if user is not None and user.is_active:
         print('user:', user, 'is active: true')
         context.update({'info': 'Your account is already activated'})
     elif user is not None and account_activation_token.check_token(user, token):

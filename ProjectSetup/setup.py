@@ -15,6 +15,10 @@ class ProjSetup:
         self.SECRET_KEY = os.environ.get('SECRET_KEY')
         self.ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*'] if self.DEV else [self.DOMAIN, '*']
         self.DATABASES = self.__get_databases(base_dir)
+        self.REDIS_HOST = os.environ.get('REDIS_HOST')
+        self.REDIS_PORT = os.environ.get('REDIS_PORT')
+        self.EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+        self.EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
     def __get_databases(self, base_dir):
         dev_db = {
