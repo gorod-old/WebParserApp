@@ -167,7 +167,7 @@ class Parser:
 
 class ParserAutoStart:
     def __init__(self, spreadsheet):
-        super(Parser, self).__init__()
+        super(ParserAutoStart, self).__init__()
         self.id = uuid.uuid4()
         self.parser_name = 'autostart 1'
         self.spreadsheet_link = spreadsheet
