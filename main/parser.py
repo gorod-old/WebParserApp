@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup as Bs
 
 from main.g_spreadsheets import get_spreadsheet_id, get_service, get_data_from_sheet, get_range, add_text_to_sheet
 from main.models import WorkTable
+from main.save_data import save_json
 
 
 def get_request_data(url: str, random_wait: tuple = (.01, .05)):
@@ -116,6 +117,7 @@ class Parser:
     def job(self):
         if not self.is_run:
             return
+        result = {}
         data, row_count = self.get_table_data()
         for i in range(row_count):
             row = data.get('values')[i]
@@ -150,6 +152,12 @@ class Parser:
                     range_ = get_range([2, i + 1], [4, i + 1])
                     print(range_)
                     add_text_to_sheet(self._get_g_service(), self.spreadsheet_id, [row], range_, 'ROWS')
+                    json = {
+                        'title': title,
+                        'price': price
+                    }
+                    result.update({url: json})
+        save_json(result, root_folder='result_data', folder='json')
 
     def _get_g_service(self):
         if self.g_service is None:

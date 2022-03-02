@@ -7,17 +7,17 @@ $(function() {
     });
 
     $('input[name=spreadsheet]').on('input', function() {
-        if($('input[name=spreadsheet]').val() != '') spreadsheet_check = true
+        if($('input[name=spreadsheet]').val() != '' && is_run) {
+            show_start_bt('Update Parser');
+        }
     })
 
     $('#spreadsheet-clear-bt').on('click', function() {
         event.preventDefault();
-        var text = $('input[name=spreadsheet').val();
-        $('input[name=spreadsheet').val('');
-        if(text != '' && !spreadsheet_check) {
-            $('#parser-form-submit').html('Update Parser');
-            $('#parser-form-submit').css("display", "inline-block");
+        if($('input[name=spreadsheet').val() != '' && is_run) {
+            show_start_bt('Update Parser');
         }
+        $('input[name=spreadsheet').val('');
     })
 
     $('#parser-form-stop').on('click', function() {
@@ -29,19 +29,18 @@ $(function() {
             success: function (data) {
                 console.log('response data: ', data)
                 if (data['success'] == true) {
-                    spreadsheet_check = false
+                    is_run = false
                     $('#parser-form-stop').css("display", "none");
-                    $('#parser-form-submit').css("display", "inline-block");
-                    $('#parser-form-submit').html('Start Parser');
                     $('#parser-status').css("display", "none");
-                    $('input[name=spreadsheet').val('');
                     $('.load_screen').css("display", "none");
+                    show_start_bt('Start Parser');
                 }
             }
         });
     })
 
     function run_parser() {
+        $('.load_screen').css("display", "block");
         var name = $('input[name=name]').val();
         var spreadsheet = $('input[name=spreadsheet]').val();
         var csrftoken = $('input[name=csrfmiddlewaretoken]').val();
@@ -63,13 +62,20 @@ $(function() {
                     $('#modal-dialog-parser .modal-body').html(html);
                     $('#modal-dialog-parser').modal('show');
                 } else {
-                    spreadsheet_check = false
+                    is_run = true
                     $('#parser-form-submit').css("display", "none");
                     $('#parser-form-stop').css("display", "inline-block");
                     $('#parser-status').css("display", "block");
+                    $('#spreadsheet-link').attr("href", spreadsheet);
+                    $('.load_screen').css("display", "none");
                 }
             }
         });
+    }
+
+    function show_start_bt(text) {
+        $('#parser-form-submit').html(text);
+        $('#parser-form-submit').css("display", "inline-block");
     }
 });
 
@@ -81,4 +87,10 @@ function copyToClipboard() {
   copyText.setSelectionRange(0, 99999); /* For mobile devices */
 
   navigator.clipboard.writeText(copyText.value);
+}
+
+function copySpreadsheetLink(id) {
+  var copyText = document.getElementById(id).href;
+  console.log(copyText)
+  navigator.clipboard.writeText(copyText);
 }

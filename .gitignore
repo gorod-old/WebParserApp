@@ -140,3 +140,5 @@ GitHub.sublime-settings
 *.session
 credentials/*
 *__pycache__
+
+result_data

@@ -337,10 +337,13 @@ form-group-col input, .form-group-col label, .form-group-col button {
 
 
 /* For mobile phones: */
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 1280px) {
     html, body {
+        min-width: 320px;
         padding-right: 0;
     }
+}
+@media only screen and (max-width: 768px) {
 
     [class*="col-"] {
        width: 100%;

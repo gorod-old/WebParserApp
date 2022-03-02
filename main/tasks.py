@@ -1,6 +1,7 @@
 from celery import shared_task
 
 from main.parser import Parser, ParserAutoStart
+from main.save_data import get_json_data_from_file
 
 
 @shared_task
@@ -19,3 +20,9 @@ def run_pars_on_background(spreadsheet):
     parser.job()
 
 
+@shared_task
+def process_data():
+    path = 'result_data/json/result.json'
+    data = get_json_data_from_file(path)
+    # process data and save in spreadsheet >>>
+    print(data)

@@ -12,13 +12,15 @@
         <h2 class="jumbotron-heading">Fill out the form to launch or update the parser.</h2>
     </div>
 
-    <div id="parser-status" class="container title-container" style="{% if spreadsheet == '' %}display: none;{% endif %}">
+    <div id="parser-status" class="container title-container" style="{% if not is_run %}display: none;{% endif %}">
         <h4 style="color: green;">Parser is run.</h4>
+        <a id="spreadsheet-link" href="{{ spreadsheet }}" target="_blank" class="btn btn-outline-secondary">Spreadsheet Link</a>
+        <button id="spreadsheet-copy" type="button" onclick="copySpreadsheetLink('spreadsheet-link')" class="btn btn-outline-secondary">Copy</button>
     </div>
 
     <div class="container">
         <div class="row justify-content-center">
-
+            <script> var is_run = '{{ is_run | escapejs }}'; </script>
             <form id="parser-form" class="justify-content-center align-items-center flex-wrap parser-form">
                 {% csrf_token %}
                 <div class="modal-body">
