@@ -51,6 +51,7 @@ $(function () {
                     $('#not-user-profile').removeClass('d-none');
                     $('#user-info-img-not-profile').removeClass('d-none');
                     $('#user-info-img').addClass('d-none');
+                    window.location.href = 'login';
                 }
             }
         });

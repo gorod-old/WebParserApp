@@ -165,3 +165,77 @@ class Parser:
         return data, row_count
 
 
+class ParserAutoStart:
+    def __init__(self, spreadsheet):
+        super(Parser, self).__init__()
+        self.id = uuid.uuid4()
+        self.parser_name = 'autostart 1'
+        self.spreadsheet_link = spreadsheet
+        self.spreadsheet_id = get_spreadsheet_id(spreadsheet)
+        self.g_service = None
+
+    def __del__(self):
+        print(f'instance {self.id} - deleted')
+
+    @property
+    def instance_id(self):
+        return str(self.id)
+
+    @property
+    def name(self):
+        return self.parser_name
+
+    @property
+    def spreadsheet(self):
+        return self.spreadsheet_link
+
+    def job(self):
+        data, row_count = self.get_table_data()
+        for i in range(row_count):
+            row = data.get('values')[i]
+            url = row[0]
+            if 'https://' in url:
+                r = get_request_data(url)
+                print(r.status_code)
+                if r and r.status_code == 200:
+                    soup = Bs(r.text, 'html.parser')
+                    row = []
+                    title = None
+                    try:
+                        title = soup.select(
+                            '#container > div.product-detail__same-part-kt.same-part-kt > div > '
+                            'div.same-part-kt__header-wrap.hide-mobile > h1')[0].text.strip()
+                    except Exception as e:
+                        print(str(e))
+                    row.append(title)
+                    price_txt = None
+                    try:
+                        price_txt = soup.select(
+                            '#infoBlockProductCard > div.same-part-kt__price-block > '
+                            'div > div > p > span')[0].text.strip()
+                    except Exception as e:
+                        print(str(e))
+                    price = ''
+                    if price_txt:
+                        for ch in price_txt:
+                            if ch.isdigit():
+                                price += ch
+                    row.append(price)
+                    range_ = get_range([2, i + 1], [4, i + 1])
+                    print(range_)
+                    add_text_to_sheet(self._get_g_service(), self.spreadsheet_id, [row], range_, 'ROWS')
+
+    def _get_g_service(self):
+        if self.g_service is None:
+            self.g_service = get_service()
+        return self.g_service
+
+    def get_table_data(self):
+        data = get_data_from_sheet(self._get_g_service(), self.spreadsheet_id, range_='A1:B', major_dimension='ROWS')
+        rows = data.get('values')
+        row_count = len(rows) if rows else 0
+        print('table data:', data)
+        print('row count: ', row_count)
+        return data, row_count
+
+

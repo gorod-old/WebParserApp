@@ -21,6 +21,12 @@ app.conf.beat_schedule = {
     'run_pars_every_10_min': {
         'task': 'main.tasks.run_pars',
         'schedule': 600,
+    },
+
+    'run_pars_every_10_min_auto': {
+        'task': 'main.tasks.run_pars_on_background',
+        'schedule': 600,
+        'args': ('https://docs.google.com/spreadsheets/d/1AlWBMJHv7voJmCDBAPcuzaPj2vBbcQDffgR4e2A3wNY/edit?usp=sharing',)
     }
 }
 app.conf.timezone = 'UTC'

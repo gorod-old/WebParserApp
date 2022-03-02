@@ -88,14 +88,17 @@ def activate_user(request):
     context = {}
     if user is not None and user.is_active:
         print('user:', user, 'is active: true')
+        context.update({'success': True})
         context.update({'info': 'Your account is already activated'})
     elif user is not None and account_activation_token.check_token(user, token):
         print('user:', user, 'check token: true')
         user.is_active = True
         user.save()
+        context.update({'success': True})
         context.update({'info': 'Account successfully activated'})
     else:
         print('user:', user, 'check token: false')
+        context.update({'success': False})
         context.update({'info': 'Activation link is invalid!'})
     return render(request, 'user_auth/acc_activation.html', context=context)
 

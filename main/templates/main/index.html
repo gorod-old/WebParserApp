@@ -49,7 +49,7 @@
                             type="button" class="btn btn-danger my-2 main-bt">Stop</button>
                     <button id="parser-form-submit" style="{% if is_run %}display: none;{% endif %}"
                             type="submit" class="btn btn-primary my-2 main-bt">
-                        {% if spreadsheet == '' %}Start Parser{% else %}Update Parser{% endif %}</button>
+                        {% if spreadsheet != '' and is_run %}Update Parser{% else %}Start Parser{% endif %}</button>
                 </p>
             </form>
         </div>
