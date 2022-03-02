@@ -19,6 +19,7 @@ class ProjSetup:
         self.REDIS_PORT = os.environ.get('REDIS_PORT')
         self.EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
         self.EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+        self.TIME_ZONE = os.environ.get('TIME_ZONE')
 
     def __get_databases(self, base_dir):
         dev_db = {

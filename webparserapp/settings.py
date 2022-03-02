@@ -140,6 +140,7 @@ CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = setup.TIME_ZONE
 
 # send mail setup
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
