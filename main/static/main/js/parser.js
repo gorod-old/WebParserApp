@@ -1,5 +1,9 @@
+$( document ).ready(function() {
+
+});
+
 $(function() {
-    var spreadsheet_check = false
+    new ClipboardJS('.clipboard');
 
     $('#parser-form').on('submit', function() {
         event.preventDefault();
@@ -79,18 +83,18 @@ $(function() {
     }
 });
 
-function copyToClipboard() {
-  var copyText = document.getElementById("id_app_link");
-
-  /* Select the text field */
-  copyText.select();
-  copyText.setSelectionRange(0, 99999); /* For mobile devices */
-
-  navigator.clipboard.writeText(copyText.value);
-}
-
-function copySpreadsheetLink(id) {
-  var copyText = document.getElementById(id).href;
-  console.log(copyText)
-  navigator.clipboard.writeText(copyText);
-}
+//function copyToClipboard() {
+//  var copyText = document.getElementById("id_app_link");
+//
+//  /* Select the text field */
+//  copyText.select();
+//  copyText.setSelectionRange(0, 99999); /* For mobile devices */
+//
+//  navigator.clipboard.writeText(copyText.value);
+//}
+//
+//function copySpreadsheetLink(id) {
+//  var copyText = document.getElementById(id).href;
+//  console.log(copyText)
+//  navigator.clipboard.writeText(copyText);
+//}

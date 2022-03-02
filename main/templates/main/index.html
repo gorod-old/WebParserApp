@@ -15,7 +15,7 @@
     <div id="parser-status" class="container title-container" style="{% if not is_run %}display: none;{% endif %}">
         <h4 style="color: green;">Parser is run.</h4>
         <a id="spreadsheet-link" href="{{ spreadsheet }}" target="_blank" class="btn btn-outline-secondary">Spreadsheet Link</a>
-        <button id="spreadsheet-copy" type="button" onclick="copySpreadsheetLink('spreadsheet-link')" class="btn btn-outline-secondary">Copy</button>
+        <button type="button" data-clipboard-text="{{ spreadsheet }}" class="btn btn-outline-secondary clipboard">Copy</button>
     </div>
 
     <div class="container">
@@ -41,7 +41,9 @@
                                 <input type="text" name="app_link" id="id_app_link"
                                        value="gorod-old-service-account@python-bot-331309.iam.gserviceaccount.com"
                                        style="color: #55a889;" readonly>
-                                <button id="app-link-copy-bt" onclick="copyToClipboard()" type="button" class="btn btn-secondary">Copy link</button>
+                                <button type="button"
+                                        data-clipboard-text="gorod-old-service-account@python-bot-331309.iam.gserviceaccount.com"
+                                        class="btn btn-secondary clipboard">Copy link</button>
                             </div>
                         </div>
                         </div>
