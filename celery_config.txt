@@ -3,7 +3,16 @@ celery -A proj-name status			-celery status
 celery -A proj-name beat -l info		-Runing the Celery beat
 celery -A proj-name flower			-Runing the Flower (celery monitor)
 
-Конфигурационные файлы (автозапуск):
+Redis install:
+
+sudo apt install redis-server
+
+sudo vim /etc/redis/redis.conf      -редактируем поле supervised no >> supervised systemd
+
+sudo systemctl restart redis.service
+
+
+Конфигурационные файлы Celery (автозапуск):
 
 /etc/conf.d/celery  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
