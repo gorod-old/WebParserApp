@@ -1,10 +1,7 @@
-$( document ).ready(function() {
-
-});
-
 $(function() {
     new ClipboardJS('.clipboard');
 
+    is_run = is_run=='True' ? true : false
     $('#parser-form').on('submit', function() {
         event.preventDefault();
         run_parser();
